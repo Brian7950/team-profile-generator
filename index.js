@@ -25,7 +25,7 @@ function init(){
                 getEngineerDetails();
                 break;
             default: 
-                createPage();
+                // createPage();
         }
     })
 }
@@ -65,6 +65,7 @@ function getManagerDetails(){
           </div>
         </div>
       </div>`
+      init()
     })
 }
 

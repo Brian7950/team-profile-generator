@@ -25,7 +25,7 @@ function init(){
                 getEngineerDetails();
                 break;
             default: 
-                // createPage();
+                // createPage();    <-work on this 
         }
     })
 }
@@ -105,4 +105,6 @@ function getInternDetails(){
       </div>`
     })
 }
+
+init();
 

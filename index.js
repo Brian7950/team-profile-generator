@@ -5,6 +5,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 let htmlTemp = "";
 
+//starts application and asks user to select a role to input info for
 function init() {
     inquirer.prompt([
         {
@@ -30,12 +31,12 @@ function init() {
     })
 }
 
-
+//create Manager object if user selects 'Add Manager' 
 function getManagerDetails() {
     inquirer.prompt([
         {
             type: "input",
-            message: "Enter Manager name:",
+            message: "Enter Manager's name:",
             name: "name",
             validate: answer => {
                 if (answer !== "") {
@@ -75,12 +76,65 @@ function getManagerDetails() {
     })
 };
 
+//create engineer object if user selects 'Add Engineer'
+function getEngineerDetails(){
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Enter Engineer's name:",
+            name: "name",
+            validate: answer => {
+                if (answer !== "") {
+                    return true;
+                }
+                return "Please enter at least one character.";
+            }
+        },
+        {
+            type:"input",
+            message:"Enter Engineer's ID #",
+            name:"id"
+        },
+        {
+            type: "input",
+            message: "Enter Engineer's Email:",
+            name: "email"
+        },
+        {
+            type:"input",
+            message:"Enter Engineer's GitHub username",
+            name:"github"
+        }
+    ])
+    .then(({ name, id, email, github }) => {
+        const engineerObj = new Engineer(name, id, email, github)
+        htmlTemp += ` <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">${engineerObj.name} title</h5>
+            <p class="card-text">${engineerObj.email}</p>
+            <p class="card-text">${engineerObj.id}</p>
+            <p class="card-text">${engineerObj.github}</p>
+          </div>
+        </div>
+      </div>`
+        addAnotherMember();
+    })
+};
+
+//creete Intern Object if user selects 'Add Intern'
 function getInternDetails() {
     inquirer.prompt([
         {
             type: "input",
-            message: "Enter Intern name:",
-            name: "name"
+            message: "Enter Intern's name:",
+            name: "name",
+            validate: answer => {
+                if (answer !== "") {
+                    return true;
+                }
+                return "Please enter at least one character.";
+            }
         },
         {
             type: "input",
@@ -109,6 +163,7 @@ function getInternDetails() {
           </div>
         </div>
       </div>`
+      console.log(internObj);
         addAnotherMember();
     })
 };
@@ -124,10 +179,12 @@ function addAnotherMember() {
         }
     ])
         .then(confirmation => {
-            if (confirmation) {
+            console.log(confirmation);
+            if (confirmation.continue === true) {
                 return init()
             } else {
-                return "DONE"
+                if (confirmation.continue === false)
+                    return console.log("Creating Team Page");
             }
         })
 };

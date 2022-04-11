@@ -4,7 +4,7 @@ const Manager = require("./lib/Manager");
 const inquirer = require('inquirer');
 const generatePage = require('./src/page-template');
 const path = require("path");
-const OUTPUT_DIR = path.resolve(__dirname, "output")
+const OUTPUT_DIR = path.resolve(__dirname, "dist");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const fs = require('fs');
 
@@ -15,7 +15,7 @@ function init() {
     inquirer.prompt([
         {
             type: "list",
-            choices: ["Add Manager", "Add Intern", "Add Engineer", "EXIT"],
+            choices: ["Add Manager", "Add Intern", "Add Engineer", "Exit"],
             message: "What would you like to do?",
             name: "userChoice"
         }
@@ -31,7 +31,7 @@ function init() {
                 getEngineerDetails();
                 break;
             default:
-            // createPage();    <-work on this 
+                createHtmlPage();
         }
     })
 }
@@ -168,7 +168,6 @@ function addAnotherMember() {
                 return init()
             } else {
                 if (confirmation.continue === false)
-                    return console.log("Creating Team Page");
                 createHtmlPage();
             }
         })
@@ -180,6 +179,7 @@ function createHtmlPage() {
         fs.mkdirSync(OUTPUT_DIR)
     }
     fs.writeFileSync(outputPath, generatePage(teamMemberArray), "utf-8");
+    console.log("inside createHtmlPage function");
 };
 
 

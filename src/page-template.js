@@ -78,7 +78,7 @@ const generateTeam = (team) => {
     return htmlPage.join("");
 
 }
-
+//packaging function to create page and be used in another file
 module.exports = teamMembers =>{
     return `
     <!DOCTYPE html>

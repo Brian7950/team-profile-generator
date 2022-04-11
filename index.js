@@ -2,15 +2,20 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 const inquirer = require('inquirer');
+const generatePage = require('./src/page-template');
+const path = require("path");
+const OUTPUT_DIR = path.resolve(__dirname, "output")
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 const fs = require('fs');
-let htmlTemp = "";
+
+const teamMemberArray = [];
 
 //starts application and asks user to select a role to input info for
 function init() {
     inquirer.prompt([
         {
             type: "list",
-            choices: ["Add Manager", "Add Intern", "Add Engineer", "I don't want to add any more members"],
+            choices: ["Add Manager", "Add Intern", "Add Engineer", "EXIT"],
             message: "What would you like to do?",
             name: "userChoice"
         }
@@ -47,7 +52,7 @@ function getManagerDetails() {
         },
         {
             type: "input",
-            message: "Enter Manager ID:",
+            message: "Enter Manager ID #:",
             name: "id"
         },
         {
@@ -61,23 +66,17 @@ function getManagerDetails() {
             name: "officeNumber"
         }
     ]).then(({ name, id, email, officeNumber }) => {
-        const managerObj = new Manager(name, id, email, officeNumber)
-        htmlTemp += ` <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">${managerObj.name} title</h5>
-            <p class="card-text">${managerObj.email}</p>
-            <p class="card-text">${managerObj.id}</p>
-            <p class="card-text">${managerObj.officeNumber}</p>
-          </div>
-        </div>
-      </div>`
+        const managerObj = new Manager(name, id, email, officeNumber);
+        //add this obj to team member array 
+        teamMemberArray.push(managerObj)
+        console.log(teamMemberArray);//test
+
         addAnotherMember()
     })
 };
 
 //create engineer object if user selects 'Add Engineer'
-function getEngineerDetails(){
+function getEngineerDetails() {
     inquirer.prompt([
         {
             type: "input",
@@ -91,9 +90,9 @@ function getEngineerDetails(){
             }
         },
         {
-            type:"input",
-            message:"Enter Engineer's ID #",
-            name:"id"
+            type: "input",
+            message: "Enter Engineer's ID #",
+            name: "id"
         },
         {
             type: "input",
@@ -101,25 +100,18 @@ function getEngineerDetails(){
             name: "email"
         },
         {
-            type:"input",
-            message:"Enter Engineer's GitHub username",
-            name:"github"
+            type: "input",
+            message: "Enter Engineer's GitHub username",
+            name: "github"
         }
     ])
-    .then(({ name, id, email, github }) => {
-        const engineerObj = new Engineer(name, id, email, github)
-        htmlTemp += ` <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">${engineerObj.name} title</h5>
-            <p class="card-text">${engineerObj.email}</p>
-            <p class="card-text">${engineerObj.id}</p>
-            <p class="card-text">${engineerObj.github}</p>
-          </div>
-        </div>
-      </div>`
-        addAnotherMember();
-    })
+        .then(({ name, id, email, github }) => {
+            const engineerObj = new Engineer(name, id, email, github)
+            //push Engineer object to team array 
+            teamMemberArray.push(engineerObj);
+            console.log(teamMemberArray); //test
+            addAnotherMember();
+        })
 };
 
 //creete Intern Object if user selects 'Add Intern'
@@ -138,7 +130,7 @@ function getInternDetails() {
         },
         {
             type: "input",
-            message: "Enter Intern ID:",
+            message: "Enter Intern ID #:",
             name: "id"
         },
         {
@@ -152,18 +144,10 @@ function getInternDetails() {
             name: "school"
         }
     ]).then(({ name, id, email, school }) => {
-        const internObj = new Intern(name, id, email, school)
-        htmlTemp += ` <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">${internObj.name} title</h5>
-            <p class="card-text">${internObj.email}</p>
-            <p class="card-text">${internObj.id}</p>
-            <p class="card-text">${internObj.school}</p>
-          </div>
-        </div>
-      </div>`
-      console.log(internObj);
+        const internObj = new Intern(name, id, email, school);
+        // add intern object to array 
+        teamMemberArray.push(internObj);
+        console.log(teamMemberArray);
         addAnotherMember();
     })
 };
@@ -185,9 +169,19 @@ function addAnotherMember() {
             } else {
                 if (confirmation.continue === false)
                     return console.log("Creating Team Page");
+                createHtmlPage();
             }
         })
 };
+
+function createHtmlPage() {
+    //create html file to view apps output
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+    fs.writeFileSync(outputPath, generatePage(teamMemberArray), "utf-8");
+};
+
 
 init();
 

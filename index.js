@@ -69,8 +69,6 @@ function getManagerDetails() {
         const managerObj = new Manager(name, id, email, officeNumber);
         //add this obj to team member array 
         teamMemberArray.push(managerObj)
-        console.log(teamMemberArray);//test
-
         addAnotherMember()
     })
 };
@@ -109,7 +107,6 @@ function getEngineerDetails() {
             const engineerObj = new Engineer(name, id, email, github)
             //push Engineer object to team array 
             teamMemberArray.push(engineerObj);
-            console.log(teamMemberArray); //test
             addAnotherMember();
         })
 };
@@ -147,7 +144,6 @@ function getInternDetails() {
         const internObj = new Intern(name, id, email, school);
         // add intern object to array 
         teamMemberArray.push(internObj);
-        console.log(teamMemberArray);
         addAnotherMember();
     })
 };
@@ -163,7 +159,6 @@ function addAnotherMember() {
         }
     ])
         .then(confirmation => {
-            console.log(confirmation);
             if (confirmation.continue === true) {
                 return init()
             } else {

@@ -168,6 +168,7 @@ function addAnotherMember() {
                 return init()
             } else {
                 if (confirmation.continue === false)
+                console.log("CREATING YOUR TEAM PAGE!");
                 createHtmlPage();
             }
         })
@@ -179,7 +180,6 @@ function createHtmlPage() {
         fs.mkdirSync(OUTPUT_DIR)
     }
     fs.writeFileSync(outputPath, generatePage(teamMemberArray), "utf-8");
-    console.log("inside createHtmlPage function");
 };
 
 
